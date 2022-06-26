@@ -6,9 +6,9 @@ import graphql.GraphQLError;
 import graphql.language.SourceLocation;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.graphql.execution.DataFetcherExceptionResolver;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindException;
 import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
@@ -46,7 +46,8 @@ public class GraphQLExceptionHandler implements DataFetcherExceptionResolver {
             List<SourceLocation> locations) {
         log.info("[GraphQLExceptionHandler] Creating lis of BadRequestException...");
         return exception.getConstraintViolations().stream()
-                .map(constraint -> new BadRequestException(constraint.getMessageTemplate(), locations))
+                .map(constraint -> new BadRequestException(constraint.getMessageTemplate(), locations,
+                        ((PathImpl) constraint.getPropertyPath()).getLeafNode()))
                 .map(badRequestException -> (GraphQLError) badRequestException)
                 .collect(Collectors.toList());
     }

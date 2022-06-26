@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,7 +28,8 @@ public class ErrorInterceptor implements WebGraphQlInterceptor {
                     log.info("[ErrorInterceptor] Intercepting response... ");
 
                     List<GraphQLError> graphQLErrors = response.getErrors().stream()
-                            .filter(error -> !ErrorType.DataFetchingException.equals(error.getErrorType()))
+                            .filter(error -> ErrorType.InvalidSyntax.equals(error.getErrorType())
+                                    || ErrorType.ValidationError.equals(error.getErrorType()))
                             .map(this::resolveException)
                             .collect(Collectors.toList());
 
@@ -38,15 +38,6 @@ public class ErrorInterceptor implements WebGraphQlInterceptor {
                         return response.transform(builder -> builder.errors(graphQLErrors));
                     }
 
-                    Optional<GraphQLError> invalidRequestFormatMessage = response.getErrors().stream()
-                            .filter(responseError -> ErrorType.InvalidSyntax.equals(responseError.getErrorType()))
-                            .findFirst()
-                            .map(responseError -> new BadRequestException("1", responseError.getLocations()));
-                    if (invalidRequestFormatMessage.isPresent()) {
-                        log.info("[ErrorInterceptor] Found invalid syntax error! Overriding the message.");
-                        return response.transform(
-                                builder -> builder.errors(List.of(invalidRequestFormatMessage.get())));
-                    }
                     return response;
                 });
     }
