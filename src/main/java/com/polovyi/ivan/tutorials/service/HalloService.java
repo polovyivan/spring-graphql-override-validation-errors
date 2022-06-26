@@ -1,5 +1,6 @@
 package com.polovyi.ivan.tutorials.service;
 
+import com.polovyi.ivan.tutorials.configuration.Dictionary;
 import com.polovyi.ivan.tutorials.exception.UnprocessableEntityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,6 @@ public class HalloService {
             throw new UnprocessableEntityException("4");
         }
 
-        return "Hello " + name + ". You are " + ChronoUnit.YEARS.between(birthDate, LocalDate.now()) + " years old :)";
+        return Dictionary.valueOf("0", name, ChronoUnit.YEARS.between(birthDate, LocalDate.now()));
     }
 }

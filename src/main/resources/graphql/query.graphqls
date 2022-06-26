@@ -1,6 +1,5 @@
 scalar Date
 
-
 type Query {
              hello (name  : String
                     birthDate : Date) : String

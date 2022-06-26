@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "eb4b47f1-be32-43a1-b212-c3564a5c6379",
+		"name": "7.spring-graphql-override-validation-errors",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hello",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "ua",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\n       hello(name: \"Ivan\"\n             birthDate : \"1984-06-12\"\n        )                                \n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
